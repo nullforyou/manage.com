@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title><{block name="title"}><{/block}><{:config('site.title')}></title>
+        <meta name="keywords" content="N0.7测试站"/>
+        <meta name="description" content="N0.7测试站"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<meta name='robots' content='noindex,follow' />
+        <link rel='stylesheet' id='qzhai-css'  href='__CSS__/style.css?ver=4.8' type='text/css' media='all' />
+        <link rel='stylesheet' id='highlight-css'  href='__CSS__/code/sunburst.css?ver=4.8' type='text/css' media='all' />
+        <script type='text/javascript' src='__JS__/jquery.min.js?ver=4.8'></script>
+	</head>
+	<body class="uk-height-1-1">
+		<div id="main" class="wp uk-grid uk-grid-collapse" style="max-width:1120px">
+            
+            <!--左侧开始-->
+            <{include file="No.7_qzhai/public/left"}>
+            <!--左侧结束-->
+            
+            <div id="content" class="uk-width-small-1-1 uk-width-medium-3-4 uk-width-large-5-6 uk-grid uk-grid-collapse">
+                <!--主体开始-->
+                <{block name="main"}><{/block}>
+                <!--主体结束-->
+                
+                <!--侧边栏开始-->
+                <{include file="No.7_qzhai/public/sidebar"}>
+                <!--侧边栏结束-->
+                
+                <!--友情链接开始-->
+                <div class="ft uk-visible-small">
+                    <!--保留主题制作人-->
+                    <p><a href="#my-link" data-uk-modal>友情链接</a>  - <a href="http://qzhai.net" target="_black" title="主题制作:衫小寨" data-uk-tooltip="{pos:'bottom'}"> Theme by Qzhai</a></p>
+                </div>
+                <!--友情链接结束-->
+                
+            </div>  
+            <script type='text/javascript' src='__JS__/wp-embed.min.js'></script>
+            <script type='text/javascript' src='__JS__/highlight.pack.js'></script>
+            <script type='text/javascript' src='__JS__/app.js'></script>
+
+            <a href="#" class="top" data-uk-smooth-scroll style="display:none"><i class="uk-icon-angle-up"></i></a>
+            <div id="my-link" class="uk-modal">
+                <div class="uk-modal-dialog">
+                    <a class="uk-modal-close uk-close"></a>
+                    <h2>友情链接</h2>
+                    <ul id="link_qzhai" class=" uk-subnav uk-subnav-line">
+                        <li id="menu-item-40" class="" ><a href="http://qzhai.net">衫小寨</a></li>
+                        <li id="menu-item-64" class="" ><a href="http://www.zkl2333.com">My space</a></li>
+                        <li id="menu-item-65" class="" ><a href="https://rabbittu.com">伊妮卡丽因</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

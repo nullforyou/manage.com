@@ -1,0 +1,128 @@
+<{extend name="public/base" /}>
+<{block name="title"}>类别 - <{/block}>
+<{block name="css"}>
+<{/block}>
+<{block name="main"}>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+                <div class="row">
+                    <div class="fixed-table-toolbar">
+                        <div class="bars pull-left">
+                            <div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">
+                                <button type="button" class="btn btn-outline btn-primary" onclick="popup('<{:url("/manage/content/cat/modify")}>', '', '800px', '500px');">
+                                    <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="columns columns-right btn-group pull-right">
+                            <button class="btn btn-primary btn-outline" onclick="javascript:window.location.href='<{:url("/manage/content/cat/list")}>'" type="button" name="refresh" title="刷新"><i class="glyphicon glyphicon-repeat"></i></button>
+                        </div>
+                        <div class="pull-right search">
+                            <input class="form-control input-outline" placeholder="未实现" type="text">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="bootstrap-table">
+                        <div class="fixed-table-container">
+                            <div class="fixed-table-body">
+                                <table data-toggle="table" data-classes="table table-hover table-condensed" data-url="js/demo/table_base.json" data-striped="true" data-height="250" data-mobile-responsive="true" class="table table-hover table-condensed table-striped" style="margin-top: -37px;">
+                                    <thead>
+                                        <tr>
+                                            <th tabindex="0">
+                                                <div class="th-inner">分类名称</div>
+                                                <div class="fht-cell"></div>
+                                            </th>
+											<th tabindex="0">
+                                                <div class="th-inner">分类标签</div>
+                                                <div class="fht-cell"></div>
+                                            </th>
+                                            <th tabindex="0">
+                                                <div class="th-inner">分类路径</div>
+                                                <div class="fht-cell"></div>
+                                            </th>
+                                            <th tabindex="0">
+                                                <div class="th-inner">是否可用</div>
+                                                <div class="fht-cell"></div>
+                                            </th>
+											<th tabindex="0">
+                                                <div class="th-inner">操作</div>
+                                                <div class="fht-cell"></div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <{foreach name="list" item="vo" }>
+                                            <tr data-id="<{$vo.category_id}>">
+                                                <td>|——<{$vo.category_name}></td>
+												<td><{$vo.category_tag}></td>
+                                                <td><{$vo.category_path}></td>
+                                                <td>
+                                                    <{if condition="$vo.disabled eq 0"}>
+                                                        <span class="badge badge-primary"><i class="fa fa-check"></i></span>
+                                                    <{else}>
+                                                        <span class="badge badge-default"><i class="fa fa-close"></i></span>
+                                                    <{/if}>
+                                                </td>
+												<td>
+													<a onclick="popup('<{:url("/manage/content/cat/modify/".$vo.category_id)}>', '', '800px', '500px');"><i class="fa fa-edit"></i></a>
+												</td>
+                                            </tr>
+											<{if condition="!empty($vo['c'])"}>
+												<{foreach name="vo.c" item="v" }>
+													<tr data-id="<{$v.category_id}>">
+														<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|——<{$v.category_name}></td>
+														<td><{$v.category_tag}></td>
+														<td><{$v.category_path}></td>
+														<td>
+															<{if condition="$v.disabled eq 0"}>
+																<span class="badge badge-primary"><i class="fa fa-check"></i></span>
+															<{else}>
+																<span class="badge badge-default"><i class="fa fa-close"></i></span>
+															<{/if}>
+														</td>
+														<td>
+															<a onclick="popup('<{:url("/manage/content/cat/modify/".$v.category_id)}>', '', '800px', '500px');"><i class="fa fa-edit"></i></a>
+														</td>
+													</tr>
+													<{if condition="!empty($v['c'])"}>
+														<{foreach name="v.c" item="vi" }>
+															<tr data-id="<{$v.category_id}>">
+																<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|——<{$vi.category_name}></td>
+																<td><{$vi.category_tag}></td>
+																<td><{$vi.category_path}></td>
+																<td>
+																	<{if condition="$vi.disabled eq 0"}>
+																		<span class="badge badge-primary"><i class="fa fa-check"></i></span>
+																	<{else}>
+																		<span class="badge badge-default"><i class="fa fa-close"></i></span>
+																	<{/if}>
+																</td>
+																<td>
+																	<a onclick="popup('<{:url("/manage/content/cat/modify/".$vi.category_id)}>', '', '800px', '500px');"><i class="fa fa-edit"></i></a>
+																</td>
+															</tr>
+														<{/foreach}>
+													<{/if}>
+												<{/foreach}>
+											<{/if}>
+                                        <{/foreach}>
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<{/block}>
+<{block name="js"}>
+<script type="text/javascript">
+
+</script>
+<{/block}>

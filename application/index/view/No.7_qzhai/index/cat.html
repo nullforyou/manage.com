@@ -1,0 +1,21 @@
+<{extend name="No.7_qzhai/public/base" /}>
+    
+<{block name="title"}>分类-<{/block}>
+
+<{block name="main"}>
+    
+<div class="uk-width-small-1-1 uk-width-medium-3-4 uk-width-large-7-10"> 
+    <div id="index" class="bs uk-text-break">
+	<h1 class="h4" style="display: block;">分类</h1>
+        <div id="list" class="category" style="display: block;">
+            <p class="date"><strong>本站</strong>目前共有分类：<{:count($cat)}></p>
+            <{volist name="cat" id="item"}>
+                <a href="<{:config('site.baseurl')}>/article/cat/<{$item.category_id}>.html" data-uk-tooltip=""><{$item.category_name}> (<{$item.article_count}>)</a>
+            <{/volist}>
+        </div>
+    </div>
+    <ul class="uk-pagination"></ul>
+</div>
+<{/block}>
+<{block name="js"}>
+<{/block}>

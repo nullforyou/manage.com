@@ -1,0 +1,199 @@
+<{extend name="public/popup_base" /}>
+<{block name="css"}>
+<{if condition="$edittype eq 'html'"}>
+<link href="__PLUGIN__/simditor-2.3.6/styles/simditor.css" rel="stylesheet">
+<{else}>
+<link href="__PLUGIN__/markdown/css/bootstrap-markdown.min.css" rel="stylesheet">
+<{/if}>
+<{/block}>
+<{block name="main"}>
+<div class="row">
+    <div class="ibox-content">
+        <form id="modifyArticle" method="post" class="form-horizontal" action="<{:url('/manage/content/atlas/modify')}>">
+            <input type="hidden" name="id" value="<{$article.article_id}>">
+            <input type="hidden" name="edit_type" value="<{$edittype}>">
+            <{if condition="empty($article)"}>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">文章类型</label>
+                    <div class="col-sm-10">
+                        <div class="radio radio-success radio-inline checkbox-circle">
+                            <input id="template_html" value="word" name="template" type="radio">
+                            <label for="template_html"> 文章 </label>
+                        </div>
+                        <div class="radio radio-success radio-inline checkbox-circle">
+                            <input id="template_imgs" value="imgs" name="template" type="radio" checked>
+                            <label for="template_imgs"> 相册 </label>
+                        </div>
+                        <span class="help-block text-warning"><i class="fa fa-info-circle"></i> 不选默认为文章类型</span>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+            <{/if}>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">文章标题</label>
+                <div class="col-sm-10">
+                    <input class="form-control" type="text" name="title" value="<{$article.article_title}>" autocomplete="off" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">文章类别</label>
+                <div class="col-sm-10">
+                    <select class="form-control m-b" name="category" autocomplete="off" required>
+                        <{volist name="catlist" id="vo"}>
+                            <optgroup label="<{$vo.category_name}>">
+                                <{if condition="!empty($vo['c'])"}>
+                                    <{volist name="vo.c" id="v"}>
+                                        <optgroup label="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|——<{$v.category_name}>">
+                                            <{if condition="!empty($v['c'])"}>
+                                                <{volist name="v.c" id="vi"}>
+                                                    <option value="<{$vi.category_id}>" <{if condition="$article.article_category eq $vi.category_id"}>selected<{/if}>>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|——<{$vi.category_name}></option>
+                                                <{/volist}>
+                                            <{/if}>
+                                        </optgroup>
+                                    <{/volist}>
+                                <{/if}>
+                            </optgroup>
+                        <{/volist}>
+                    </select>
+                </div>
+            </div>
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">发布时间</label>
+                <div class="col-sm-10">
+                    <input class="form-control laydate-icon" type="text" name="pub_time" value="<{$article.article_pub_time|default=time()|date="Y-m-d H:i", ###}>" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm'})" autocomplete="off" placeholder="" >
+                    <span class="help-block text-warning"><i class="fa fa-info-circle"></i> 不选默认为当前时间</span>
+                </div>
+            </div>
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">文章简介</label>
+                <div class="col-sm-10">
+                    <textarea name="summary" class="form-control" autocomplete="off"><{$article.article_summary}></textarea>
+                </div>
+            </div>
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">文章图片</label>
+                <div class="col-sm-10 d-img-show">
+                    
+                    
+                    <div class="d-img-area"><div class="contact-box d-img-box"><div class="d-img-div"><div class="d-img-div-close"><i class="fa fa-close"></i></div><input name="img[1498544886]" value="http://www.manage.com/additiontodo/temp/atlas/20170627/8e1405f2bf8d183927951fbcf7a4f357.jpg" type="hidden"><img class="" src="http://www.manage.com/additiontodo/temp/atlas/20170627/8e1405f2bf8d183927951fbcf7a4f357.jpg"></div><div class="d-img-div-text-box"><div class="col-sm-2" style="padding:0px;"><label><input name="firstimg" value="1498544886" type="radio">是否头图</label></div><div class="col-sm-10" style="padding:0px;"><textarea class="text" name="imgintro[1498544886]" placeholder="文字描述..."></textarea></div></div></div></div>
+                    
+                    <{volist name="article.articleImgs" id="vo"}>
+                        <div class="d-img-area">
+                            <div class=" d-img-box">
+                                <div class="d-img-div">
+                                    <div class="d-img-div-close"><i class="fa fa-close"></i></div>
+                                    <input name="img[<{$vo.article_order}>]" value="<{$vo.article_img}>" type="hidden">
+                                    <img class="" src="<{$vo.article_img}>">
+                                </div>
+                                <div class="d-img-div-text-box">
+                                    <div class="col-sm-2" style="padding:0px;">
+                                        <label><input name="firstimg" <{if condition="$vo.article_figure"}>checked="checked"<{/if}> value="<{$vo.article_order}>" type="radio">是否头图</label>
+                                    </div>
+                                    <div class="col-sm-10" style="padding:0px;">
+                                        <textarea class="text" name="imgintro[<{$vo.article_order}>]" placeholder="文字描述..."><{$vo.article_intro}></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <{/volist}>
+                    
+                    <div class="d-file-group" id="diy_file_upload">
+                        <input type="file" name="imgs" class="d-file-input" _data_action="<{:url('/manage/upload')}>" _data_fileDistrict="atlas" _data_after_fuc="upload_after">
+                        <span class="d-file-icon"><i class="fa fa-upload"></i>上传</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+                <div class="col-sm-4 col-sm-offset-2">
+                    <button class="btn btn-primary" type="submit">保存内容</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<{/block}>
+<{block name="js"}>
+<script type="text/javascript">
+function upload_after(obj){
+    if (obj.code) {
+        var time = Date.parse( new Date() ).toString().substr(0,10);
+        var html = '<div class="d-img-area">'
+            +'<div class="contact-box d-img-box">'
+            +'<div class="d-img-div">'
+            +'<div class="d-img-div-close"><i class="fa fa-close"></i></div>'
+            +'<input type="hidden" name="img['+time+']" value="'+obj.urlimg+'">'
+            +'<img class="" src="'+obj.urlimg+'">'
+            +'</div>'
+            +'<div class="d-img-div-text-box"><div class="col-sm-2" style="padding:0px;"><label><input type="radio" name="firstimg" value="'+time+'">是否头图</label></div>'
+            +'<div  class="col-sm-10" style="padding:0px;"><textarea class="text" name="imgintro['+time+']" placeholder="文字描述..."></textarea></div>'
+            +'</div>'
+            +'</div>'
+            +'</div>';
+        $("#diy_file_upload").before(html);
+    } else {
+        parent.parent._toastr('error', '错误提示', obj.msg);
+    }
+   
+}
+$(function(){
+    $("div.d-img-show").on('click', 'div.d-img-div-close', function(){
+        $(this).parents('.d-img-area').fadeOut('slow', function(){
+            $(this).remove();
+        });
+    });
+    $("input[name='template']").change(function(){
+        if ($(this).val() == 'word') {
+            layer.load();
+            <{if condition="$article"}>
+                window.location.href="<{:url('/manage/content/article/modify/'.$article.article_id)}>";
+            <{else}>
+                window.location.href="<{:url('/manage/content/article/modify')}>";
+            <{/if}>
+        }
+    });
+    
+    $('#diy_file_upload').on('change', '.d-file-input', function(){
+        var self = $(this);
+        parent.parent._inputchanges(self, window);
+    });
+    
+    $("#modifyArticle").Validform({
+        tiptype:function(msg, o, cssctl){
+            if (o.type != 2) {
+                parent.parent._toastr('warning', '警告提示', msg);
+                return false;
+            }
+        },
+        ajaxPost:true,
+        beforeSubmit:function(form){
+            var add_article_load = layer.load();
+            $.ajax({
+                type    : $(form).attr('method'),
+                url     : $(form).attr('action'),
+                data    : $(form).serialize(),
+                dataType: 'json',
+                success : function(data){
+                    layer.close(add_article_load);
+                    if (data.code == 1) {
+                        parent.parent._toastr('success', '成功提示', data.msg);
+                        parent.window.location.reload();
+                    } else {
+                        parent.parent._toastr('error', '错误提示', data.msg);
+                        return;
+                    }
+                },
+                error:function(){
+                    layer.close(add_article_load);
+                    parent.parent._toastr('error', '错误提示', '网络错误');
+                }
+            });
+            return false;
+        }
+    });
+});
+</script>
+<{/block}>

@@ -1,0 +1,49 @@
+<{extend name="public/base" /}>
+<{block name="title"}>标签 - <{/block}>
+<{block name="css"}>
+    <style>
+        .label{font-size: 14px; padding-left: 10px;padding-right: 10px;margin: 0 10px;cursor: pointer;}
+    </style>
+<{/block}>
+<{block name="main"}>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+                <div class="row">
+                    <div class="fixed-table-toolbar">
+                        <div class="bars pull-left">
+                            <div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">
+                                <button type="button" class="btn btn-outline btn-primary" onclick="popup('<{:url("/manage/content/flag/modify")}>', '', '800px', '300px');">
+                                    <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="columns columns-right btn-group pull-right">
+                            <button class="btn btn-primary btn-outline" onclick="javascript:window.location.href='<{:url("/manage/content/flag/list")}>'" type="button" name="refresh" title="刷新"><i class="glyphicon glyphicon-repeat"></i></button>
+                        </div>
+                        <div class="pull-right search">
+                            <input class="form-control input-outline" placeholder="未实现" type="text">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <{volist name="list" id="item"}>
+                        <{if condition="$item.disabled eq 0"}>
+                            <span class="label label-primary" onclick="popup('<{:url("/manage/content/flag/modify/".$item.flag_id)}>', '', '800px', '300px');"><{$item.flag_name}></span>
+                        <{else}>
+                            <span class="label label-danger" onclick="popup('<{:url("/manage/content/flag/modify/".$item.flag_id)}>', '', '800px', '300px');"><{$item.flag_name}></span>
+                        <{/if}>
+                    <{/volist}>
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<{/block}>
+<{block name="js"}>
+<script type="text/javascript">
+
+</script>
+<{/block}>

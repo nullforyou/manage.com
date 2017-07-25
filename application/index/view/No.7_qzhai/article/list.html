@@ -1,0 +1,38 @@
+<{extend name="No.7_qzhai/public/base" /}>
+    
+<{block name="title"}>文章列表-<{/block}>
+
+<{block name="main"}>
+    
+<div class="uk-width-small-1-1 uk-width-medium-3-4 uk-width-large-7-10"> 
+    <div id="index" class="bs uk-text-break">
+        <h4>文章</h4>
+        <div id="list">
+            
+            <{volist name="list" id="item"}>
+                <article class="article class_3">
+                    <h1>
+                        <a href="<{:config('site.baseurl')}>/article/<{$item.article_id}>.html"><{$item.article_title}></a>
+                    </h1>
+                    <p>
+                        <a style="color: #696969;text-decoration: none;" href="<{:config('site.baseurl')}>/article/<{$item.article_id}>.html">
+                            <{$item.article_summary}>
+                        </a>
+                    </p>
+                    <p style="padding-top: 5px;">
+                        <span><{$item.article_pub_time|date="y-m-d",###}></span>
+                        <span style="padding-left: 10px;">浏览：<{$item.article_hits}></span>
+                    </p>
+                </article>
+            <{/volist}>
+        </div>
+    </div>
+    <ul class="uk-pagination"></ul>
+</div>
+
+
+<{/block}>
+    
+<{block name="js"}>
+
+<{/block}>

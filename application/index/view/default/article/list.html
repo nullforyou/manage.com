@@ -1,0 +1,34 @@
+<{extend name="/default/public/base" /}>
+    
+<{block name="title"}><{/block}>
+<{block name="main"}>
+<style>
+    .bs-callout {
+        padding: 20px;
+        margin-bottom: 20px;
+        border: 1px solid #678c6d;
+        border-left-width: 1px;
+        border-left-color: #1b809e;
+        border-left-width: 5px;
+        border-radius: 3px;
+    }
+    a{color: #678c6d;}
+</style>
+<div class="container bs-docs-container">
+    <div class="col-md-9" style="background: #fff;">
+        <{volist name="data.list" id="item"}>
+            <div class="bs-callout bs-callout-info" id="callout-navbar-breakpoint">
+                <div>
+                    <a href="<{:url('/article/' . $item.article_id)}>"><{$item.article_title|htmlspecialchars}></a>
+                </div>
+                <div style="text-align: right;">Date：<{$item.updated_at}></div>
+            </div>
+        <{/volist}>
+    </div>
+    
+</div>
+<{/block}>
+<{block name="js"}>
+<script>
+</script>
+<{/block}>

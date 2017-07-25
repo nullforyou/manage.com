@@ -1,0 +1,109 @@
+<{extend name="public/base" /}>
+<{block name="title"}>文章 - <{/block}>
+<{block name="css"}>
+<{/block}>
+<{block name="main"}>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+                <div class="row">
+                    <div class="fixed-table-toolbar">
+						<div class="bars pull-left">
+							<div class="btn-group hidden-xs">
+								<button type="button" class="btn btn-outline btn-primary" onclick="popup('<{:url("/manage/content/article/modify")}>');">
+									<i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
+								</button>
+							</div>
+						</div>
+						<form action="<{:url('/manage/content/article/list')}>" method="get">
+							<div class="columns columns-right btn-group pull-right">
+								<button class="btn btn-primary btn-outline" type="submit" name="refresh" title="搜索"><i class="fa fa-search"></i></button>
+								<button class="btn btn-primary btn-outline" type="button" name="refresh" title="刷新" onclick="javascript:window.location.href='<{:url("/manage/content/article/list")}>'"><i class="glyphicon glyphicon-repeat"></i></button>
+							</div>
+							<div class="pull-right search">
+								<input placeholder="请输入标题" name="title" class="form-control input-outline" type="text" value="<{$request->get('title')}>">
+							</div>
+						</form>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="bootstrap-table">
+                        <div class="fixed-table-container">
+                            <div class="fixed-table-body">
+                                <table data-toggle="table" data-striped="true" data-height="250" data-mobile-responsive="true" class="table table-hover table-condensed table-striped" style="margin-top: -37px;">
+                                    <thead>
+                                        <tr>
+                                            <th tabindex="0">
+                                                <div class="th-inner">文章标题</div>
+                                                <div class="fht-cell"></div>
+                                            </th>
+											<th tabindex="0">
+                                                <div class="th-inner">文章类别</div>
+                                                <div class="fht-cell"></div>
+                                            </th>
+                                            <th tabindex="0">
+                                                <div class="th-inner">文章类型</div>
+                                                <div class="fht-cell"></div>
+                                            </th>
+                                            <th tabindex="0">
+                                                <div class="th-inner">上线时间</div>
+                                                <div class="fht-cell"></div>
+                                            </th>
+											<th tabindex="0">
+                                                <div class="th-inner">文章状态</div>
+                                                <div class="fht-cell"></div>
+                                            </th>
+											<th tabindex="0">
+                                                <div class="th-inner">操作</div>
+                                                <div class="fht-cell"></div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <{volist name="data.list" id="vo"}>
+											<tr>
+												<td><{$vo.article_title|htmlspecialchars}></td>
+												<td><{$category[$vo['article_category']]}></td>
+												<td>
+													<{if condition="$vo.article_template eq 'word'"}>
+														文字
+													<{else}>
+														图集
+													<{/if}>
+												</td>
+												<td><{$vo.article_pub_time|date="Y-m-d H:i", ###}></td>
+												<td>
+													<{switch name="vo.article_if_pub"}>
+														<{case value="pass"}><span class="label label-primary">上线</span><{/case}>
+														<{case value="wait_auth"}><span class="label label-warning">待上线</span><{/case}>
+														<{default /}><span class="label label-danger">已删除</span>
+													<{/switch}>
+												</td>
+												<td>
+													<a class="a-tool-m-5" onclick="popup('<{:url("/manage/content/article/modify/".$vo.article_id)}>', '【修改】<{$vo.article_title|htmlspecialchars}>');"><i class="fa fa-edit" title="修改"></i></a>
+													<{if condition="$vo.article_if_pub eq 'pass'"}>
+														<a class="a-tool-m-5" onclick="oper('<{:url("/manage/content/article/pub/down/".$vo.article_id)}>');"><i class="fa fa-cart-arrow-down" title="下线"></i></a>
+													<{else}>
+														<a class="a-tool-m-5" onclick="oper('<{:url("/manage/content/article/pub/up/".$vo.article_id)}>');"><i class="fa fa-upload" title="上线"></i></a>
+													<{/if}>
+													<a class="a-tool-m-5" onclick="oper('<{:url("/manage/content/article/pub/disabled/".$vo.article_id)}>', 'post', 'alert');"><i class="fa fa-trash" title="删除"></i></a>
+												</td>
+											</tr>
+										<{/volist}>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<{/block}>
+<{block name="js"}>
+<script type="text/javascript">
+
+</script>
+<{/block}>

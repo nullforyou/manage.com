@@ -1,0 +1,110 @@
+<{extend name="public/base" /}>
+<{block name="title"}>权限设置 - <{/block}>
+<{block name="main"}>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+                <form id="modifyRoleAuthForm" class="form-horizontal m-t" method="post" action="<{:url('/manage/power/role/authorize')}>" novalidate="novalidate" enctype="multipart/form-data">
+                    <input type="hidden" name="__token__" value="<{$Request.token}>"/>
+                    <input type="hidden" name="role_id" value="<{$role_id}>">
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <{foreach name="menus" item="vo" key="key"}>
+                                <div class="ibox float-e-margins clear">
+                                    <div class="ibox-title">
+                                        <div class="col-sm-3">
+                                            <div class="checkbox checkbox-success">
+                                                <input id="all_<{$key}>" class="checkbox-parent" type="checkbox">
+                                                <label for="all_<{$key}>"><h5><{$vo.label}></h5></label>
+                                            </div>
+                                        </div>
+                                        <div class="ibox-tools">
+                                            <a class="collapse-link">
+                                                <i class="fa fa-chevron-up"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="ibox-content">
+                                        <{foreach name="vo.menu" item="v" key="k"}>
+                                            <div class="col-sm-3">
+                                                <div class="checkbox checkbox-primary">
+                                                    <input id="<{$v.as}>" name="menus[]" value="<{$v.as}>" <{if condition="!empty($authList[$v.as])"}>checked<{/if}> class="all_<{$key}>-select-child" type="checkbox">
+                                                    <label for="<{$v.as}>"><{$v.label}></label>
+                                                </div>
+                                            </div>
+                                        <{/foreach}>
+                                    </div>
+                                </div>
+                            <{/foreach}>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12 text-right">
+                            <div class="col-sm-offset-2">
+                                <button class="btn btn-primary" type="submit">保存</button>
+                                <button class="btn btn-white" type="button" onclick="javascript:parent.layer.closeAll();">取消</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<{/block}>
+<{block name="js"}>
+<script>
+$(function(){
+    $(".checkbox-parent").on('click', function(){
+        if (this.checked) {
+            $("."+$(this).attr('id') + "-select-child").prop('checked', true);
+        } else {
+            $("."+$(this).attr('id') + "-select-child").prop('checked', false);
+        }
+    });
+    $("#modifyRoleAuthForm").Validform({
+        tiptype:function(msg, o, cssctl){
+            if (o.type != 2) {
+                parent.parent._toastr('warning', '警告提示', msg);
+                return false;
+            }
+        },
+        ajaxPost:true,
+        beforeSubmit:function(form){
+            if ($("#modifyRoleAuthForm").prop('disabled') == true) {
+                parent.parent._toastr('warning', '警告提示', '不能重复提交表单');
+                return false;
+            }
+            $("#modifyRoleAuthForm").prop('disabled', true);
+            var add_sow_load = layer.load();
+            $.ajax({
+                type    : 'post',
+                url     : $(form).attr('action'),
+                data    : $(form).serialize(),
+                dataType: 'json',
+                success:function(json){
+                    layer.close(add_sow_load);
+                    if (json.code == 1) {
+                        parent.parent._toastr('success', '成功提示', json.msg);
+                        parent.layer.closeAll();
+                    } else {
+                        $("#modifyRoleAuthForm").prop('disabled', false);
+                        if (json.data.__token__) {
+                            $('input[name=__token__]').val(json.data.__token__);
+                        }
+                        parent.parent._toastr('error', '错误提示', json.msg);
+                    }
+                    return false;
+                },
+                error:function(){
+                    layer.close(add_sow_load);
+                    parent.parent._toastr('error', '错误提示', '网络错误');
+                }
+            });
+            return false;
+        }
+    });
+});
+</script>
+<{/block}>

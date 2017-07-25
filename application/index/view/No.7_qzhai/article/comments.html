@@ -1,0 +1,201 @@
+<div id="qzhai_comments" style="display: block;">
+	
+	<{if condition="count($article.comment)"}>
+		<h4>评论</h4>
+		<ul id="comments" class="uk-comment-list">
+			
+			
+			<{volist name="article.comment" id="item"}>
+				<{if condition="$item.comment_auth eq 'pass'"}>
+					<li id="li-comment-<{$item.comment_id}>">
+						<article class="uk-comment">
+							<img alt="<{$item.origin_nickname}>" src="<{:get_gravatar($item.origin_email)}>" srcset="<{:get_gravatar($item.origin_email)}>" class="avatar avatar-50 photo" height="50" width="50">
+								<h6 class="uk-comment-title uk-clearfix">
+									<cite>
+										<{if condition="$item.origin_url"}>
+											<a href="<{$item.origin_url}>" target="_blank" rel="external nofollow" class="url"><{$item.origin_nickname}></a>
+										<{else}>
+											<{$item.origin_nickname}>
+										<{/if}>
+									</cite>
+									<time>&nbsp;<{$item.created_at}></time>
+									
+									<{if condition="hasSettings('article_comment')"}>
+										<span class="uk-comment-meta uk-float-right">
+											<a rel="nofollow" class="comment-reply-link" href="<{:config('site.baseurl')}>/article/<{$article.article_id}>.html?replytocom=<{$item.comment_id}>#respond" aria-label="回复给<{$vo.origin_nickname}>">回复 </a>
+										</span>
+									<{/if}>
+								</h6>
+								<p><{$item.comment_content|htmlspecialchars}></p>
+						</article>
+					</li>
+					<{if condition="item.subComment"}>
+						<ul class="children">
+							<{volist name="item.subComment" id="vo"}>
+								<{if condition="$vo.comment_auth eq 'pass'"}>
+									<li id="li-comment-113">
+										<article class="uk-comment">
+											<img alt="" src="<{:get_gravatar($vo.origin_email)}>" srcset="<{:get_gravatar($vo.origin_email)}>" class="avatar avatar-50 photo" height="50" width="50">
+												<h6 class="uk-comment-title uk-clearfix">
+													<cite>
+														<{if condition="$vo.origin_url"}>
+															<a href="<{$item.origin_url}>" target="_blank" rel="external nofollow" class="url"><{$vo.origin_nickname}></a>
+														<{else}>
+															<{$vo.origin_nickname}>
+														<{/if}>
+													</cite>
+													<time>&nbsp;<{$vo.created_at}></time>
+													<{if condition="hasSettings('article_comment') and hasSettings('article_comment_tree')"}>
+															<span class="uk-comment-meta uk-float-right" style="display: none;">
+																<a rel="nofollow" class="comment-reply-link" href="<{:config('site.baseurl')}>/article/<{$article.article_id}>.html?replytocom=<{$vo.comment_id}>#respond" aria-label="回复给<{$vo.origin_nickname}>">回复 </a>
+															</span>
+													<{/if}>
+												</h6>
+												<p><{$vo.sub_comment_content|htmlspecialchars}></p>
+										</article>
+									</li>
+								<{elseif $vo.comment_auth eq 'wait_auth' && $request->ip() eq $vo.origin_ip}>
+									<li id="li-comment-113">
+										<article class="uk-comment">
+											<img alt="" src="<{:get_gravatar($vo.origin_email)}>" srcset="<{:get_gravatar($vo.origin_email)}>" class="avatar avatar-50 photo" height="50" width="50">
+												<h6 class="uk-comment-title uk-clearfix">
+													<cite>
+														<{if condition="$vo.origin_url"}>
+															<a href="<{$item.origin_url}>" target="_blank" rel="external nofollow" class="url"><{$vo.origin_nickname}></a>
+														<{else}>
+															<{$vo.origin_nickname}>
+														<{/if}>
+													</cite>
+													<time>&nbsp;<{$vo.created_at}></time>
+												</h6>
+												<div class="uk-alert" data-uk-alert=""><a href="" class="uk-alert-close uk-close"></a>你的评论正在审核，稍后会显示出来！</div>
+												<p><{$vo.sub_comment_content|htmlspecialchars}></p>
+										</article>
+									</li>
+								<{/if}>
+							<{/volist}>
+						</ul>
+					<{/if}>
+				
+				<{elseif condition="$item.comment_auth eq 'wait_auth' && $request->ip() eq $item.origin_ip"}>
+					<li id="li-comment-<{$item.comment_id}>">
+						<article class="uk-comment">
+							<img alt="<{$item.origin_nickname}>" src="<{:get_gravatar($item.origin_email)}>" srcset="<{:get_gravatar($item.origin_email)}>" class="avatar avatar-50 photo" height="50" width="50">
+								<h6 class="uk-comment-title uk-clearfix">
+									<cite>
+										<{if condition="$item.origin_url"}>
+											<a href="<{$item.origin_url}>" target="_blank" rel="external nofollow" class="url"><{$item.origin_nickname}></a>
+										<{else}>
+											<{$item.origin_nickname}>
+										<{/if}>
+									</cite>
+									<time>&nbsp;<{$item.created_at}></time>
+								</h6>
+								<div class="uk-alert" data-uk-alert=""><a href="" class="uk-alert-close uk-close"></a>你的评论正在审核，稍后会显示出来！</div>
+								<p><{$item.comment_content|htmlspecialchars}></p>
+						</article>
+					</li>
+				<{/if}>
+			<{/volist}>
+		</ul>
+	<{/if}>
+
+    <{if condition="hasSettings('article_comment')"}>
+		<div id="respond" class="comment_form" role="form">
+			
+			<{if condition="$replytocom"}>
+				<h2 id="reply-title" class="comments-title">回复给 <a href="#comment-<{$replytocom.comment_id}>"><{$replytocom.origin_nickname}></a>
+					<small>
+						<a rel="nofollow" id="cancel-comment-reply-link" href="<{:config('site.baseurl')}>/article/<{$article.article_id}>.html#respond">点击这里取消回复。</a>
+					</small>
+				</h2>
+			<{else}>
+				<h2 id="reply-title" class="comments-title">发表评论</h2>
+			<{/if}>
+			
+			<form action="<{:config('site.baseurl')}>/article/comment.html" method="post" class="uk-form" id="commentform">
+				<div class="textarea_qzhai">
+					<ul class="uk-subnav">
+						<li id="emojis_a" class="uk-parent"> 
+							<a href="javascript:;"> <i class="uk-icon-smile-o"></i></a>    
+						</li>
+						<li> <a onclick="javascript:grin('<img src=\'输入图片地址\' />')"> <i class="uk-icon-image"></i></a> </li>
+					</ul>
+					<div id="emojis_list" class="uk-overflow-container" style="display:none;">
+						<table>
+							<tbody>
+								<tr>
+									<td><a onclick="javascript:grin(':razz:')"><img src="__IMAGE__/72x72/1f61b.png"></a></td>
+									<td><a onclick="javascript:grin(':sad:')"><img src="__IMAGE__/72x72/1f612.png"></a></td>
+									<td><a onclick="javascript:grin(':smile:')"><img src="__IMAGE__/72x72/1f60a.png"></a></td>
+									<td><a onclick="javascript:grin(':oops:')"><img src="__IMAGE__/72x72/1f633.png"></a></td>
+									<td><a onclick="javascript:grin(':grin:')"><img src="__IMAGE__/72x72/1f600.png"></a></td>
+									<td><a onclick="javascript:grin(':eek:')"><img src="__IMAGE__/72x72/1f62e.png"></a></td>
+									<td><a onclick="javascript:grin(':shock:')"><img src="__IMAGE__/72x72/1f62f.png"></a></td>
+									<td><a onclick="javascript:grin(':???:')"><img src="__IMAGE__/72x72/1f615.png"></a></td>
+									<td><a onclick="javascript:grin(':cool:')"><img src="__IMAGE__/72x72/1f60e.png"></a></td>
+									<td><a onclick="javascript:grin(':lol:')"><img src="__IMAGE__/72x72/1f606.png"></a></td>
+									<td><a onclick="javascript:grin(':mad:')"><img src="__IMAGE__/72x72/1f621.png"></a></td>
+									<td><a onclick="javascript:grin(':wink:')"><img src="__IMAGE__/72x72/1f609.png"></a></td>
+									<td><a onclick="javascript:grin(':cry:')"><img src="__IMAGE__/72x72/1f625.png">  </a></td>
+									<td><a onclick="javascript:grin(':neutral:')"><img src="__IMAGE__/72x72/1f610.png"></a></td>
+									<td><a onclick="javascript:grin(':evil:')"><img src="__IMAGE__/72x72/1f47f.png"></a></td>
+									<td><a onclick="javascript:grin(':twisted:')"><img src="__IMAGE__/72x72/1f608.png"></a></td>
+									<td><a onclick="javascript:grin(':idea:')"><img src="__IMAGE__/72x72/1f4a1.png"></a></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<textarea id="comment" autocomplete="off" onkeydown="if(event.ctrlKey&&event.keyCode==13){document.getElementById('submit').click();return false};" placeholder="内容..." tabindex="1" name="comment"></textarea>
+				</div>
+				<div class="text uk-grid uk-grid-small">
+					<div class="uk-width-medium-1-4 uk-form-icon">
+						<i class="uk-icon-user"></i>
+						<input id="author" autocomplete="off" tabindex="2" value="" name="author" placeholder="昵称*" class="uk-width-1-1" type="text">
+					</div>
+					<div class=" uk-width-medium-1-4 uk-form-icon">
+						<i class="uk-icon-envelope"></i>
+						<input id="email" autocomplete="off" tabindex="3" value="" name="email" placeholder="邮箱*" class="uk-width-1-1" type="text">
+					</div>
+					<div class="uk-width-medium-1-4 uk-form-icon">
+						<i class="uk-icon-laptop"></i>
+						<input id="url" autocomplete="off" tabindex="4" value="" name="url" placeholder="网址" class="uk-width-1-1" type="text">
+					</div>
+					<div class="uk-width-medium-1-4">
+						<button name="submit" type="submit" id="submit" class="uk-button uk-width-1-1" tabindex="5">回复</button>
+					</div>
+				</div>
+				<input name="comment_post_ID" autocomplete="off" value="<{$article.article_id}>" id="comment_post_ID" type="hidden">
+				<input name="comment_parent" autocomplete="off" id="comment_parent" value="<{:input('replytocom')}>" type="hidden">
+			</form>
+		</div>
+	<{/if}>
+</div>
+<script>
+$(function(){
+	$("#commentform").submit(function(){
+		$.ajax({
+			url:$("#commentform").attr('action'),
+			type:$("#commentform").attr('method'),
+			data:$("#commentform").serialize(),
+			dataType:'json',
+			success:function(json){
+				if (json.success) {
+					window.location.href = "<{:config('site.baseurl')}>/article/<{$article.article_id}>.html";
+				} else {
+					UIkit.notify("<i class='uk-icon-remove'></i> "+json.message, {
+						pos: "bottom-right",
+						status: "danger"
+					})
+				}
+			},error:function(){
+				UIkit.notify("<i class='uk-icon-remove'></i> 网络错误，请刷新再试", {
+					pos: "bottom-right",
+					status: "danger"
+				})
+			}
+		});
+		return false;
+	});
+});
+</script>

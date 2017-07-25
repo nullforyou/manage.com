@@ -1,0 +1,274 @@
+<{extend name="public/popup_base" /}>
+<{block name="css"}>
+<link href="__PLUGIN__/chosen_v1.6.2/chosen.min.css" rel="stylesheet">
+<link rel="stylesheet" href="__PLUGIN__/editor.md/css/editormd.min.css" />
+<{/block}>
+<{block name="main"}>
+<div class="row">
+    <div class="ibox-content">
+        <form id="modifyArticle" method="post" class="form-horizontal" action="<{:url('/manage/content/article/modify')}>">
+            <input type="hidden" name="id" value="<{$article.article_id}>">
+            <input type="hidden" name="edit_type" value="<{$edittype}>">
+            <{if condition="empty($article)"}>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">文章类型</label>
+                    <div class="col-sm-10">
+                        <div class="radio radio-success radio-inline checkbox-circle">
+                            <input id="template_html" value="word" name="template" type="radio" checked>
+                            <label for="template_html"> 文章 </label>
+                        </div>
+                        <div class="radio radio-success radio-inline checkbox-circle">
+                            <input id="template_imgs" value="imgs" name="template" type="radio">
+                            <label for="template_imgs"> 相册 </label>
+                        </div>
+                        <span class="help-block text-warning"><i class="fa fa-info-circle"></i> 不选默认为文章类型</span>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+            <{/if}>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">文章标题</label>
+                <div class="col-sm-10">
+                    <input class="form-control" type="text" name="title" value="<{$article.article_title}>" autocomplete="off" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">文章类别</label>
+                <div class="col-sm-10">
+                    <select class="form-control m-b" name="category" autocomplete="off" required>
+                        <{volist name="catlist" id="vo"}>
+                            <optgroup label="<{$vo.category_name}>">
+                                <{if condition="!empty($vo['c'])"}>
+                                    <{volist name="vo.c" id="v"}>
+                                        <optgroup label="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|——<{$v.category_name}>">
+                                            <{if condition="!empty($v['c'])"}>
+                                                <{volist name="v.c" id="vi"}>
+                                                    <option value="<{$vi.category_id}>" <{if condition="$article.article_category eq $vi.category_id"}>selected<{/if}>>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|——<{$vi.category_name}></option>
+                                                <{/volist}>
+                                            <{/if}>
+                                        </optgroup>
+                                    <{/volist}>
+                                <{/if}>
+                            </optgroup>
+                        <{/volist}>
+                    </select>
+                </div>
+            </div>
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">发布时间</label>
+                <div class="col-sm-10">
+                    <input class="form-control laydate-icon" type="text" name="pub_time" value="<{$article.article_pub_time|default=time()|date="Y-m-d H:i", ###}>" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm'})" autocomplete="off" placeholder="" >
+                    <span class="help-block text-warning"><i class="fa fa-info-circle"></i> 不选默认为待上线</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">文章状态</label>
+                <div class="col-sm-10">
+                    <div class="radio radio-success radio-inline checkbox-circle">
+                        <input id="pub_pass" value="pass" name="if_pub" type="radio" <{if condition="$article.article_if_pub eq 'pass'"}>checked<{/if}> >
+                        <label for="pub_pass"> 上线 </label>
+                    </div>
+                    <div class="radio radio-success radio-inline checkbox-circle">
+                        <input id="pub_wait_auth" value="wait_auth" name="if_pub" type="radio" <{if condition="$article.article_if_pub eq 'wait_auth'"}>checked<{/if}> >
+                        <label for="pub_wait_auth"> 待上线 </label>
+                    </div>
+                    <span class="help-block text-warning"><i class="fa fa-info-circle"></i> 不选默认为上线</span>
+                </div>
+            </div>
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">文章标签</label>
+                <div class="col-sm-10">
+                    <input type="hidden" name="article_flag">
+                    <select data-placeholder="请选择文章标签" id="article_flag" autocomplete="off" class="form-control chosen-select" multiple tabindex="4">
+                        <option value=""></option>
+                        <{volist name="flaglist" id="item"}>
+                            <option value="<{$item.flag_id}>" hassubinfo="true" <{if condition="isset($article.article_flag) && in_array($item.flag_id, $article.article_flag)"}>selected<{/if}>><{$item.flag_name}></option>
+                        <{/volist}>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-sm-2 control-label">所属地区</label>
+                <div class="col-sm-10 region-select-box" select-data-value="<{$article.article_region}>">
+                    <div class="region-box"></div>
+                    <span class="help-block text-warning"><i class="fa fa-info-circle"></i> 不选则无地区区分</span>
+                </div>
+                
+            </div>
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">文章简介</label>
+                <div class="col-sm-10">
+                    <textarea name="summary" class="form-control" autocomplete="off"><{$article.article_summary}></textarea>
+                </div>
+            </div>
+            <div class="hr-line-dashed"></div>
+            <{if condition="empty($article)"}>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"></label>
+                    <div class="col-sm-10">
+                        <div class="btn-group">
+                            <{if condition="$edittype eq 'html'"}>
+                                <button class="btn btn-success" type="button">simditor编辑器</button>
+                                <button class="btn" type="button" onclick="javascript:window.location.href='<{:url("/manage/content/article/modify")}>?edittype=markdown';">MarkDown编辑器</button>
+                            <{else}>
+                                <button class="btn" type="button" onclick="javascript:window.location.href='<{:url("/manage/content/article/modify")}>?edittype=html';">simditor编辑器</button>
+                                <button class="btn btn-success" type="button">MarkDown编辑器</button>
+                            <{/if}>
+                        </div>
+                    </div>
+                </div>
+            <{/if}>
+            
+            <div class="form-group">
+                <label class="col-sm-2 control-label">文章内容</label>
+                <div class="col-sm-10">
+                    <div id="markdown-editormd">
+                        <textarea id="article_markdown" name="article_markdown" style="display:none;" placeholder="这里输入内容" class="form-control"><{$article.articleWord.article_markdown}></textarea>
+                    </div>
+                    <div>
+                        <textarea id="content" name="content" style="display:none;" placeholder="" class="form-control"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+                <div class="col-sm-4 col-sm-offset-2">
+                    <button class="btn btn-primary" type="submit">保存内容</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<{/block}>
+<{block name="js"}>
+<script src="__PLUGIN__/chosen_v1.6.2/chosen.jquery.min.js"></script>
+<script src="__PLUGIN__/editor.md/editormd.js"></script>
+<script type="text/javascript">
+function sendFile(file, editor, editable, url){
+    var formData = new FormData();
+    formData.append("contentfile", file[0]);
+    formData.append('fileName', 'contentfile');
+    formData.append('fileDistrict', 'content');
+    $.ajax({
+        data: formData,  
+        type: "POST",
+        url: url,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function(json) {
+            if (json.code == 0) {
+                parent.parent._toastr('error', '错误提示', json.msg);
+            } else {
+                editor.insertImage(editable, json.urlimg); 
+            }
+        },
+        error: function() {
+            parent.parent._toastr('error', '错误提示', '网络错误');
+        }
+    })
+}
+$(function(){
+    $(".chosen-select").chosen();
+    
+    var markdownEditor = editormd("markdown-editormd", {
+        height: 500,
+        path : '__PLUGIN__/editor.md/lib/',
+        //theme : "dark",
+        //previewTheme : "dark",
+        //editorTheme : "pastel-on-dark",
+        codeFold : true,
+        //syncScrolling : false,
+        saveHTMLToTextarea : true,    // 保存 HTML 到 Textarea
+        searchReplace : true,
+        //watch : false,                // 关闭实时预览
+        htmlDecode : "style,script,iframe|on*",            // 开启 HTML 标签解析，为了安全性，默认不开启    
+        //toolbar  : false,             //关闭工具栏
+        //previewCodeHighlight : false, // 关闭预览 HTML 的代码块高亮，默认开启
+        emoji : true,
+        taskList : true,
+        tocm            : true,         // Using [TOCM]
+        tex : false,                   // 开启科学公式TeX语言支持，默认关闭
+        flowChart : true,             // 开启流程图支持，默认关闭
+        sequenceDiagram : true,       // 开启时序/序列图支持，默认关闭,
+        //dialogLockScreen : false,   // 设置弹出层对话框不锁屏，全局通用，默认为true
+        //dialogShowMask : false,     // 设置弹出层对话框显示透明遮罩层，全局通用，默认为true
+        //dialogDraggable : false,    // 设置弹出层对话框不可拖动，全局通用，默认为true
+        //dialogMaskOpacity : 0.4,    // 设置透明遮罩层的透明度，全局通用，默认值为0.1
+        //dialogMaskBgColor : "#000", // 设置透明遮罩层的背景颜色，全局通用，默认为#fff
+        imageUpload : true,
+        imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+        imageUploadURL : "<{:url('/manage/upload')}>",
+        onload : function() {
+            //this.fullscreen();
+            //this.unwatch();
+            //this.watch().fullscreen();
+
+            //this.setMarkdown("#PHP");
+            //this.width("100%");
+            //this.height(480);
+            //this.resize("100%", 640);
+        }
+    });
+    
+    $("input[name='template']").change(function(){
+        if ($(this).val() == 'imgs') {
+            layer.load();
+            <{if condition="$article"}>
+                window.location.href="<{:url('/manage/content/atlas/modify/'.$article.article_id)}>";
+            <{else}>
+                window.location.href="<{:url('/manage/content/atlas/modify')}>";
+            <{/if}>
+            
+        }
+    });
+    $("#modifyArticle").Validform({
+        tiptype:function(msg, o, cssctl){
+            if (o.type != 2) {
+                parent.parent._toastr('warning', '警告提示', msg);
+                return false;
+            }
+        },
+        ajaxPost:true,
+        beforeSubmit:function(form){
+            var add_article_load = layer.load();
+            
+            $("#content").val(markdownEditor.getHTML());
+            
+            if (!$('#article_flag').val()) {
+                layer.close(add_article_load);
+                parent.parent._toastr('warning', '警告提示', '请选择标签');
+                return false;
+            }
+            $('input[name=article_flag]').val($('#article_flag').val().join(','));
+            $.ajax({
+                type    : $(form).attr('method'),
+                url     : $(form).attr('action'),
+                data    : $(form).serialize(),
+                dataType: 'json',
+                success : function(data){
+                    layer.close(add_article_load);
+                    if (data.code == 1) {
+                        parent.parent._toastr('success', '成功提示', data.msg);
+                        parent.window.location.reload();
+                    } else {
+                        parent.parent._toastr('error', '错误提示', data.msg);
+                        return;
+                    }
+                },
+                error:function(){
+                    layer.close(add_article_load);
+                    parent.parent._toastr('error', '错误提示', '网络错误');
+                }
+            });
+            return false;
+        }
+    });
+});
+</script>
+<{/block}>

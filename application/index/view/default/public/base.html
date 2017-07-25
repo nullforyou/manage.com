@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title><{block name="title"}><{/block}><{:config('site.title')}></title>
+    <meta name="keywords" content="<{:config('site.title')}>">
+    <meta name="description" content="<{:config('site.title')}>">
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="__CSS__/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <style>
+        body{background-color: #dff0d8;}
+        #top{margin-bottom: 60px;}
+        .bs-docs-nav{
+            background-color: #678c6d;
+        }
+        .bs-docs-nav .navbar-toggle .icon-bar{
+            background-color: #dff0d8;
+        }
+        .bs-docs-nav .navbar-brand, .bs-docs-nav .navbar-nav>li>a{
+            font-weight: 500;
+            color: #dff0d8;
+        }
+        .nav > li > a:focus, .nav > li > a:hover{
+            background-color: #678c6d;
+            color: #fff;
+        }
+        .bs-docs-header p {
+            margin-bottom: 0;
+            font-weight: 300;
+            line-height: 1.4;
+        }
+        .home h1{font-size:50px;font-weight:800;color: #777;}
+        #footer p{
+            margin: 0px;
+        }
+        .copyright {
+            background: #678c6d;
+            font-size: 13px;
+            text-align: center;
+            color: #dff0d8;
+            padding-top: 28px;
+            padding-bottom: 28px;
+        }
+        .copyright a{color: #eee;}
+    </style>
+    <{block name="css"}><{/block}>
+    
+    <script type="text/javascript">
+        window.site = {
+            'base':'http://<{:config("site.baseurl")}>',
+        };
+    </script>
+</head>
+<body>
+
+<!--顶部开始-->
+<{include file="default/public/header"}>
+<!--顶部结束-->
+
+<!--主体开始-->
+<{block name="main"}><{/block}>
+<!--主体结束-->
+
+<!--页脚开始-->
+<{include file="default/public/footer"}>
+<!--页脚结束-->
+
+</body>
+<script src="__JS__/jquery.min.js"></script>
+<script src="__JS__/jquery.form.js"></script>
+<script src="__JS__/bootstrap.min.js"></script>
+<{block name="js"}><{/block}>
+</html>

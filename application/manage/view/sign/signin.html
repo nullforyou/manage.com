@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>H+ 后台主题UI框架 - 登录</title>
+    <meta name="keywords" content="H+后台主题,后台bootstrap框架,会员中心主题,后台HTML,响应式后台">
+    <meta name="description" content="H+是一个完全响应式，基于Bootstrap3最新版本开发的扁平化主题，她采用了主流的左右两栏式布局，使用了Html5+CSS3等现代技术">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="__CSS__/bootstrap.min.css" rel="stylesheet">
+    <link href="__CSS__/font-awesome.min.css" rel="stylesheet">
+    <link href="__CSS__/animate.min.css" rel="stylesheet">
+    <link href="__CSS__/style.min.css" rel="stylesheet">
+    <link href="__PLUGIN__/toastr/toastr.min.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie9.html" />
+    <![endif]-->
+    <script>if(window.top !== window.self){ window.top.location = window.location;}</script>
+    <style type="text/css">.ad {display:none!important;display:none}</style>
+</head>
+<body class="gray-bg">
+    <div class="middle-box text-center loginscreen  animated fadeInDown">
+        <div>
+            <div>
+                <h1 class="logo-name">JX</h1>
+            </div>
+            <h3>欢迎使用 JX</h3>
+            <form id="login-form" class="m-t" role="form" action="index.html">
+                <input type="hidden" name="__token__" value="<{$Request.token}>" />
+                <div class="form-group">
+                    <input type="mobile" id="username" value="15086960018" class="form-control" placeholder="用户名" required="" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <input type="password" id="passwd" value="111111" class="form-control" placeholder="密码" required="" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-5" style="padding-left: 0px;padding-right: 0px;">
+                        <input type="text" id="captcha" class="form-control" placeholder="验证码" required="" autocomplete="off">
+                    </div>
+                    <div  class="col-sm-7" style="padding-right: 0px;">
+                        <img style="width: 100%;height: auto;" onclick="change_captcha_src(this)" src="<{:captcha_src()}>">
+                    </div>
+                    <div class="clear" style="clear: both;"></div>
+                </div>
+                <button type="submit" class="btn btn-primary block full-width m-b">登 录</button>
+                <p class="text-muted text-center"> <a href=""><small>忘记密码了？</small></a> | <a href="">注册一个新账号</a>
+                </p>
+            </form>
+        </div>
+    </div>
+    <script src="__JS__/jquery.min.js"></script>
+    <script src="__JS__/bootstrap.min.js"></script>
+    <script src="__PLUGIN__/toastr/toastr.min.js"></script>
+    <script src="__PLUGIN__/layer-v2.4/layer.js"></script>
+</body>
+</html>
+<script>
+function change_captcha_src(obj) {
+    obj.src = '<{:captcha_src()}>?'+ new Date().getTime();
+}
+$(function(){
+    toastr.options = {
+        "closeButton": true,
+        "debug": true,
+        "progressBar": true,
+        "positionClass": "toast-top-center",
+        "onclick": null,
+        "showDuration": "400",
+        "hideDuration": "1000",
+        "timeOut": "7000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    };
+    $("#login-form").submit(function(){
+        var login_load = layer.load();
+        $.ajax({
+            url:"<{:url('/manage/login')}>",
+            type:"post",
+            data:{'username':$("#username").val(), 'passwd':$("#passwd").val(),'captcha':$("#captcha").val(), '__token__':$('input[name=__token__]').val()},
+            dataType:"json",
+            success:function(json){
+                layer.close(login_load);
+                if (json.code == 1) {
+                    toastr.success('登录成功', '成功提示');
+                    window.location.href="<{:url('/manage/index')}>";
+                } else {
+                    if (json.data.__token__) {
+                        $('input[name=__token__]').val(json.data.__token__);
+                    }
+                    toastr.error(json.msg, '错误提示');
+                }
+                return false;
+            },
+            error:function(){
+                layer.close(login_load);
+                toastr.error('网络错误', '错误提示');
+            }
+        });
+        return false;
+    });
+});
+</script>
+</html>

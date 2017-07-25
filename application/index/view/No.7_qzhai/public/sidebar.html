@@ -1,0 +1,32 @@
+<div id="sidebar" class="uk-width-small-1-1 uk-width-medium-1-4 uk-width-large-3-10">
+    <ul class="ul">
+        <li>
+            <h4>提示</h4>
+            <div class="textwidget">本网站模板网上摘抄，原模板为WordPress主题。</div>
+	</li>
+        <li>
+            <h4>最新发表</h4>
+            <ul>
+		<{volist name="articleList" id="item"}>
+		    <li><a href="<{:config('site.baseurl')}>/article/<{$item.article_id}>.html"><{$item.article_title}></a></li>
+		<{/volist}>
+            </ul>
+	</li>
+    </ul>
+    <ul id="ulsid" class="ul">
+        <li style="display: none;">
+	    <h4>文章归档</h4>
+            <ul>
+                <li><a href=''>2016年八月</a></li>
+                <li><a href=''>2015年十二月</a></li>
+	    </ul>
+	</li>
+        <li style="display: none;">
+            <h4>标签</h4>
+            <div class="post-tags">
+                <a href="" class="tag-cloud-link tag-link-4 tag-link-position-1" style="font-size: 12px;">文艺青年</a>
+            </div>
+        </li>
+        <li class="adimg"><a href="javascript:void(0);" target="_blank" ><img src="__IMAGE__/sidebar.png"></a></li>
+    </ul>
+</div>

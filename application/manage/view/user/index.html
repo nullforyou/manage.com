@@ -1,0 +1,158 @@
+<{extend name="public/base" /}>
+<{block name="title"}>管理员 - <{/block}>
+<{block name="css"}>
+    <link href="__PLUGIN__/jqgrid/css/ui.jqgrid.css" rel="stylesheet">
+	<link href="__PLUGIN__/datapicker/css/datepicker.css" rel="stylesheet">
+<{/block}>
+<{block name="main"}>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+                <div class="row">
+					<div class="col-sm-12" style="height: 25px;">
+						<div class="ibox-tools">
+							<div class="adm-fa-hover"><a href="javascript:window.location.href='<{:url('/manage/power/user/list')}>'"><i class="fa fa-refresh"></i></a></div>
+						</div>
+					</div>
+                </div>
+                <div class="row" id="jqGridRow">
+                    <div class="jqGrid_wrapper">
+                        <table id="table_list_2"></table>
+                        <div id="pager_list_2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<{/block}>
+<{block name="js"}>
+    <script type="text/javascript" src="__PLUGIN__/jqgrid/js/jquery.jqGrid.min.js"></script>
+    <script type="text/javascript" src="__PLUGIN__/jqgrid/js/i18n/grid.locale-cn.js"></script>
+	<script type="text/javascript" src="__JS__/jqgrid-custom.js"></script>
+<script type="text/javascript">
+var statusJson = {"1":"正常","0":"禁用"};
+var roleJson = $.parseJSON('<{$roleJson}>');
+$(document).ready(function() {
+	$("#table_list_2").jqGrid({
+        url: "<{:url('/manage/power/user/jqgridlist/list')}>",
+		editurl: "<{:url('/manage/power/user/modify')}>",
+		datatype: "json",
+		height:$(window).height() - 177,
+		autowidth: true,
+		shrinkToFit: true,
+		rowNum: <{$rows}>,
+		rowList: [10, 20, 30],
+        sortname: 'user_id',
+        sortorder: 'desc',
+		loadComplete : function(xhr){ //请求成功事件
+			try{
+				$('.ui-jqdialog-titlebar-close').click();
+			}catch(e){}
+		},
+		colNames: ["序号", "用户名", "密码", "姓名", "状态", "邮箱", "最后登录ip", "最后登录时间", "注册时间", "角色"],
+		colModel: [
+			{name:"user_id",index: "user_id",width: 60,sorttype: "int",editable:true,align: "center",search: true,hidden:true},
+			
+			{name:"user_name",index:"user_name",align: "center",editable:true,width: 90,search: true},
+			
+			{name:"user_password",index:"user_password",align: "center",editable:true,edittype:'password',editrules:{edithidden:true},width: 90,search: false, hidden:true},
+			
+			{name:"user_realname",index:"user_realname",align: "center",editable:true,edittype:'text',editrules:{edithidden:true,required:true},width: 90,search: true},
+			{name:"user_status",index:"user_status",align: "center",editable:true,edittype:'custom',editrules:{edithidden:true,required:true,number:true,minValue:0},
+				editoptions:{
+					custom_value: function(elem, oper, value){return getFreightElementValue(elem, oper, value, 'radio')},
+					custom_element: function(value, editOptions){return createFreightEditElement(value, editOptions, statusJson, 'radio', 'single')}
+				},
+				formatter:function(cellvalue, options, rowObject){
+					return arrFormat(cellvalue, statusJson, 'single');
+				},
+				unformat:function(cellvalue, options){
+					return arrUnformat(cellvalue, statusJson, 'single');
+				},
+				width: 90,search: true},
+			
+			{name:"user_email",index:"user_email",align: "center",editable:true,edittype:'text',editrules:{edithidden:true,required:true},width: 90,search: true},
+			
+			{name:"last_login_ip",index:"last_login_ip",align: "center",editable:false,width: 90,search: true, sortable:false},
+			
+			{name:"last_login_time",index:"last_login_time",align: "center",editable:false,width: 90,search: true},
+			
+			{name:"create_time",index:"create_time",align: "center",editable:false,width: 90,search: true},
+			
+			{name:"role",index:"role",align:"center",editable:true,edittype:'select',editrules:{edithidden:true,required:true},
+				editoptions : {value:getArrVal(roleJson, 'complex')},
+				formatter:function(cellvalue, options, rowObject){
+					return arrFormat(cellvalue, roleJson, 'complex');
+				},
+				unformat:function(cellvalue, options){
+					return arrUnformat(cellvalue, roleJson, 'complex');
+				},
+				width: 90,search: false, sortable:false
+			},
+		],
+		pager: "#pager_list_2",
+		viewrecords: true,
+        pgbuttons:true,
+		hidegrid: false
+	}).navGrid('#pager_list_2', {edit: true, add: true, del: false, search:true,searchtext:''},{
+		editCaption : "修改",
+		top:50,
+		left:($(document).innerWidth() - 400) / 5 * 2,
+		width:500,
+		jqModal : true,  
+		reloadAfterSubmit : true,  
+		afterShowForm : function(form) {
+			
+		},  
+		afterSubmit: function(response, postdata) {
+			if (response.responseJSON.code == 0) {
+				return [false, response.responseJSON.msg];
+			} else {
+				layer.alert(response.responseJSON.msg, {icon: 1});
+				return [true, '', ''];
+			}
+		}
+	},{
+		addCaption : "新增",
+		top:50,
+		left:($(document).innerWidth() - 400) / 5 * 2,
+		width:500,
+		modal:true,
+		jqModal: true,
+		reloadAfterSubmit : true,
+		afterShowForm : function(form) {
+			
+		},  
+		afterSubmit: function(response, postdata) {
+			if (response.responseJSON.code == 0) {
+				return [false, response.responseJSON.msg];
+			} else {
+				layer.alert(response.responseJSON.msg, {icon: 1});
+				return [true, '', ''];
+			}
+		}
+	},{
+		caption: "删除",  
+		msg: "确定删除所选记录？",  
+		bSubmit: "删除",  
+		bCancel: "取消",
+		left:($(document).innerWidth() - 400) / 5 * 2,
+		afterSubmit: function(response, postdata) {
+			if (response.responseJSON.code == 0) {
+				return [false, response.responseJSON.msg];
+			} else {
+				return [true, '', ''];
+			}
+		}
+	},{
+		caption : "搜索",
+		top:50,
+		left:($(document).innerWidth() - 400) / 5 * 2,
+		width:500,
+		multipleSearch:true
+	});
+});
+</script>
+<{/block}>

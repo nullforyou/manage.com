@@ -1,0 +1,123 @@
+<{extend name="public/base" /}>
+<{block name="title"}>文章 - <{/block}>
+<{block name="css"}>
+<{/block}>
+<{block name="main"}>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+                <div class="row">
+                    <div class="fixed-table-toolbar">
+                        <div class="columns columns-right btn-group pull-right">
+                            <button class="btn btn-primary btn-outline" type="button" name="refresh" title="刷新" onclick="javascript:window.location.href='<{:url("/manage/content/comment/list")}>'"><i class="glyphicon glyphicon-repeat"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="bootstrap-table">
+                        <div class="fixed-table-container">
+                            <div class="fixed-table-body">
+                                <table data-toggle="table" data-striped="true" data-height="250" data-mobile-responsive="true" class="table table-hover table-condensed table-striped" style="margin-top: -37px;">
+                                    <thead>
+                                        <tr>
+                                            <th tabindex="0">
+                                                <div class="th-inner">评论内容</div>
+                                                <div class="fht-cell"></div>
+                                            </th>
+											<th tabindex="0">
+                                                <div class="th-inner">ip</div>
+                                                <div class="fht-cell"></div>
+                                            </th>
+                                            <th tabindex="0">
+                                                <div class="th-inner">评论人昵称</div>
+                                                <div class="fht-cell"></div>
+                                            </th>
+                                            <th tabindex="0">
+                                                <div class="th-inner">评论人邮箱</div>
+                                                <div class="fht-cell"></div>
+                                            </th>
+											<th tabindex="0">
+                                                <div class="th-inner">评论人网址</div>
+                                                <div class="fht-cell"></div>
+                                            </th>
+											<th tabindex="0">
+                                                <div class="th-inner">子评论数</div>
+                                                <div class="fht-cell"></div>
+                                            </th>
+                                            <th tabindex="0">
+                                                <div class="th-inner">状态</div>
+                                                <div class="fht-cell"></div>
+                                            </th>
+                                            <th tabindex="0">
+                                                <div class="th-inner">操作</div>
+                                                <div class="fht-cell"></div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <{volist name="data.list" id="vo"}>
+											<tr>
+												<td><{$vo.comment_content|htmlspecialchars}></td>
+												<td><{$vo.origin_ip}></td>
+                                                <td><{$vo.origin_nickname}></td>
+                                                <td><{$vo.origin_email}></td>
+                                                <td><{$vo.origin_url}></td>
+                                                <td><{$vo.comment_num}></td>
+												<td>
+													<{switch name="vo.comment_auth"}>
+														<{case value="pass"}><span class="label label-primary">已审核</span><{/case}>
+														<{case value="wait_auth"}><span class="label label-warning">待审核</span><{/case}>
+														<{default /}><span class="label label-danger">已删除</span>
+													<{/switch}>
+												</td>
+												<td>
+                                                    <a class="a-tool-m-5" onclick="oper('<{:url("/manage/content/comment/pub/disabled/".$vo.comment_id)}>', 'post', 'alert');"><i class="fa fa-trash" title="删除"></i></a>
+													<{if condition="$vo.comment_auth eq 'wait_auth'"}>
+														<a class="a-tool-m-5" onclick="oper('<{:url("/manage/content/comment/pub/pass/".$vo.comment_id)}>', 'post', 'alert');"><i class="fa fa-check" title="审核"></i></a>
+													<{/if}>
+													
+												</td>
+											</tr>
+                                            
+                                            <{volist name="vo.subComment" id="item"}>
+                                                <tr>
+                                                    <td><{$item.sub_comment_content|htmlspecialchars}></td>
+                                                    <td><{$item.origin_ip}></td>
+                                                    <td><{$item.origin_nickname}></td>
+                                                    <td><{$item.origin_email}></td>
+                                                    <td><{$item.origin_url}></td>
+                                                    <td>0</td>
+                                                    <td>
+                                                        <{switch name="item.comment_auth"}>
+                                                            <{case value="pass"}><span class="label label-primary">已审核</span><{/case}>
+                                                            <{case value="wait_auth"}><span class="label label-warning">待审核</span><{/case}>
+                                                            <{default /}><span class="label label-danger">已删除</span>
+                                                        <{/switch}>
+                                                    </td>
+                                                    <td>
+                                                        <a class="a-tool-m-5" onclick="oper('<{:url("/manage/content/comment/subpub/disabled/".$item.sub_comment_id)}>', 'post', 'alert');"><i class="fa fa-trash" title="删除"></i></a>
+                                                        <{if condition="$item.comment_auth eq 'wait_auth'"}>
+                                                            <a class="a-tool-m-5" onclick="oper('<{:url("/manage/content/comment/subpub/pass/".$item.sub_comment_id)}>', 'post', 'alert');"><i class="fa fa-check" title="审核"></i></a>
+                                                        <{/if}>
+                                                        
+                                                    </td>
+                                                </tr>
+                                            <{/volist}>
+										<{/volist}>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<{/block}>
+<{block name="js"}>
+<script type="text/javascript">
+
+</script>
+<{/block}>

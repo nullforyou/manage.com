@@ -1,0 +1,105 @@
+<{extend name="public/base" /}>
+<{block name="title"}>图集 - <{/block}>
+<{block name="css"}>
+<{/block}>
+<{block name="main"}>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+                <div class="row">
+					
+					
+					<div class="fixed-table-toolbar">
+						<div class="bars pull-left">
+							<div class="btn-group hidden-xs">
+								<button type="button" class="btn btn-outline btn-primary" onclick="popup('<{:url("/manage/content/atlas/modify")}>');">
+									<i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
+								</button>
+							</div>
+						</div>
+						<form action="<{:url('/manage/content/atlas/list')}>" method="get">
+							<div class="columns columns-right btn-group pull-right">
+								<button class="btn btn-primary btn-outline" type="submit" name="refresh" title="搜索"><i class="fa fa-search"></i></button>
+								<button class="btn btn-primary btn-outline" type="button" name="refresh" title="刷新" onclick="javascript:window.location.href='<{:url("/manage/content/atlas/list")}>'"><i class="glyphicon glyphicon-repeat"></i></button>
+							</div>
+							<div class="pull-right search">
+								<input placeholder="请输入标题" name="title" class="form-control input-outline" type="text" value="<{$request->get('title')}>">
+							</div>
+						</form>
+                    </div>
+                </div>
+                <div class="row" id="datalist">
+					<{volist name="data" id="vo"}>
+						<div class="col-sm-3">
+							<div class="contact-box animated pulse">
+								<div class="col-sm-12" style="padding: 0px;margin: 0px;">
+									<div class="text-center">
+										<a onclick="popup('<{:url("/manage/content/atlas/modify/".$vo.article_id)}>');">
+											<img alt="image" title="<{$vo->article_title}>" class="img-responsive" src="<{$vo->articleImgs()->where('article_figure', 1)->value('article_img')}>">
+										</a>
+										<div class="m-t-xs font-bold">
+											<{$vo->article_title}>
+										</div>
+									</div>
+								</div>
+								<div class="clearfix"></div>
+							</div>
+						</div>
+					<{/volist}>
+                </div>
+				<div class="row">
+					<button class="btn btn-primary btn-block ajaxloading" _data_page="2"><i class="fa fa-arrow-down"></i> 显示更多</button>
+				</div>
+            </div>
+        </div>
+    </div>
+</div>
+<{/block}>
+<{block name="js"}>
+<script type="text/javascript">
+$(function(){
+	$(".ajaxloading").click(function(){
+		var _this = $(this);
+		var atlas_list_load = layer.load();
+		var page = _this.attr('_data_page');
+		$.ajax({
+			url:window.location.href + '&load=1&page='+page,
+			type: 'GET', 
+			dataType: 'json',
+			error: function(){
+				indexpage = false;
+				layer.close(atlas_list_load);
+				parent._toastr('warning', '错误提示', '网络错误');
+			}, 
+			success: function(result){
+				layer.close(atlas_list_load);
+				if (result.count) {
+					_this.attr('_data_page', Number(page) + 1);
+					var html = '';
+					$.each(result.list, function(key, val){
+						html += '<div class="col-sm-3">'
+							+'<div class="contact-box animated pulse">'
+								+'<div class="col-sm-12" style="padding: 0px;margin: 0px;">'
+									+'<div class="text-center">'
+										+'<a>'
+											+'<img alt="image" title="'+val.article_title+'" class="img-responsive" src="'+val.articleImgsOne.article_img+'">'
+										+'</a>'
+										+'<div class="m-t-xs font-bold">'+val.article_title+'</div>'
+									+'</div>'
+								+'</div>'
+								+'<div class="clearfix"></div>'
+							+'</div>'
+						+'</div>';
+					});
+					$("#datalist").append(html);
+				} else {
+					_this.remove();
+				}
+			}
+		}); 
+	});
+});
+
+</script>
+<{/block}>

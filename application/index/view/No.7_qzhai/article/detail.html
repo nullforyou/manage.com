@@ -1,0 +1,70 @@
+<{extend name="No.7_qzhai/public/base" /}>
+<{block name="title"}><{$article.article_title}>-<{/block}>
+<{block name="main"}>
+<div class="uk-width-small-1-1 uk-width-medium-3-4 uk-width-large-7-10">
+    <div id="index" class="bs uk-text-break">
+        <article id="article" class="uk-article" style="display: block;">
+			<h1 class="uk-article-title"><{$article.article_title}></h1>
+            <ul class="singlenav uk-breadcrumb">
+                <li><i class="uk-icon-calendar"></i>&nbsp;<{$article.article_pub_time|date="y-m-d",###}></li>
+                <li><i class="uk-icon-eye"></i>&nbsp;<{$article.article_hits}></li>
+				<{if condition="hasSettings('article_comment')"}>
+					<li><i class="uk-icon-commenting-o"></i>&nbsp;<a href="<{:config('site.baseurl')}>/article/<{$article.article_id}>.html#comments"><{$article.article_comment_num}></a></li>
+				<{/if}>
+                <li><i class="uk-icon-heart-o"></i>&nbsp;328</li>
+            </ul>
+            <p style="display: none;">
+                <a href="" data-uk-lightbox="{group:'group_qzhai'}">
+                    <img class="alignnone wp-image-17 size-full" src="">
+                </a>
+            </p>
+            <div>
+                <{$article.articleWord.html}>
+            </div>
+            <div class="like_qzhai">
+                <div class="like_men_qzhai">
+                    <ul class="fen">
+                        <li><a href="http://www.jiathis.com/send/?webid=tsina&url=<{:config('site.baseurl')}>/article/<{$article.article_id}>.html&title=<{$article.article_title}>&summary=<{$article.article_summary}>" target="_blank" title="分享到新浪微博" data-uk-tooltip=""><i class="uk-icon-weibo"></i></a></li>
+                        <li><a href="http://www.jiathis.com/send/?webid=weixin&url=<{:config('site.baseurl')}>/article/<{$article.article_id}>.html&title=<{$article.article_title}>&summary=<{$article.article_summary}>" target="_blank" title="分享到微信" data-uk-tooltip=""><i class="uk-icon-weixin"></i></a></li>
+                        <li><a href="http://www.jiathis.com/send/?webid=renren&url=<{:config('site.baseurl')}>/article/<{$article.article_id}>.html&title=<{$article.article_title}>&summary=<{$article.article_summary}>" target="_blank" title="分享到人人网" data-uk-tooltip=""><i class="uk-icon-renren"></i></a></li>
+                        <li><a href="http://www.jiathis.com/send/?webid=tqq&url=<{:config('site.baseurl')}>/article/<{$article.article_id}>.html&title=<{$article.article_title}>&summary=<{$article.article_summary}>" target="_blank" title="分享到腾讯微博" data-uk-tooltip=""><i class="uk-icon-tencent-weibo"></i></a></li>
+                        <li><a href="http://www.jiathis.com/send/?webid=fb&url=<{:config('site.baseurl')}>/article/<{$article.article_id}>.html&title=<{$article.article_title}>&summary=<{$article.article_summary}>" target="_blank" title="分享到facebook" data-uk-tooltip=""><i class="uk-icon-facebook-f"></i></a></li>
+                        <li><a href="http://www.jiathis.com/send/?webid=twitter&url=<{:config('site.baseurl')}>/article/<{$article.article_id}>.html&title=<{$article.article_title}>&summary=<{$article.article_summary}>" target="_blank" title="分享到twitter" data-uk-tooltip=""><i class="uk-icon-twitter"></i></a></li>
+                        <li><a href="#reward" class="rewards" title="打赏作者" data-uk-tooltip=""><i class="uk-icon-rmb"></i></a></li>
+                        <div id="reward" class="uk-modal">
+                            <div class="uk-modal-dialog">
+                                <a class="uk-modal-close uk-close"></a>
+                                <div class="uk-modal-header">感谢打赏!</div>
+                                <div class="uk-thumbnail">
+                                    <img src="http://qzhai.net/000/wp-content/uploads/2016/04/erweima.jpg">
+                                        <div class="uk-thumbnail-caption">支付宝</div>
+                                </div>
+                            </div>
+                        </div>
+                        <li><a href="http://www.jiathis.com/send/?webid=ishare&amp;url=<{:config('site.baseurl')}>/article/<{$article.article_id}>.html&amp;title=<{$article.article_title}>" target="_blank" title="更多.." data-uk-tooltip=""><i class="uk-icon-plus"></i></a></li>
+                    </ul>
+                    <a href="javascript:;" data-action="ding" data-id="16" cl="0" class="favorite"> 
+                        <i class="uk-icon-heart" title="喜欢" data-uk-tooltip="{pos:'bottom'}"></i>
+                    </a>
+                    <em class="em01"><i class="uk-icon-heart"></i></em>
+                    <em class="em02"><i class="uk-icon-heart"></i></em>
+                    <em class="em03"><i class="uk-icon-heart"></i></em>
+                    <em class="em04"><i class="uk-icon-heart"></i></em>
+                    <em class="em05"><i class="uk-icon-heart"></i></em>
+                </div>
+            </div>
+			<div class="tags uk-clearfix">
+                <div class="tags uk-float-left"></div>				
+				<div class="uk-float-right"></div>					
+			</div>
+        </article>
+        
+        <{include file="No.7_qzhai/article/comments"}>
+        
+    </div>
+</div>
+<{/block}>
+    
+<{block name="js"}>
+
+<{/block}>

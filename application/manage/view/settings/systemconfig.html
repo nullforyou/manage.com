@@ -1,0 +1,110 @@
+<{extend name="public/base" /}>
+<{block name="title"}>配置设置 - <{/block}>
+<{block name="css"}>
+<{/block}>
+<{block name="main"}>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+                <div class="row">
+                    <div class="ibox-content">
+                        <form id="setSettingsConfig" method="post" class="form-horizontal" action="<{:url('/manage/settings/system/conf')}>">
+                            <h3>文章编辑器</h3>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Markdown编辑器</label>
+                                <div class="col-sm-10">
+                                    <div class="radio radio-success radio-inline checkbox-circle">
+                                        <input id="markdown_edit_enabled" value="enabled" name="config[markdown_edit]" type="radio" <{if condition="$settings.markdown_edit.param_value eq 'enabled'"}>checked<{/if}> >
+                                        <label for="markdown_edit_enabled">启用</label>
+                                    </div>
+                                    <div class="radio radio-success radio-inline checkbox-circle">
+                                        <input id="markdown_edit_disabled" value="disabled" name="config[markdown_edit]" type="radio" <{if condition="$settings.markdown_edit.param_value eq 'disabled'"}>checked<{/if}> >
+                                        <label for="markdown_edit_disabled">禁用</label>
+                                    </div>
+                                    <span class="help-block text-warning"><i class="fa fa-info-circle"></i> 不选默认为禁用</span>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <h3>文章评论</h3>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">是否启用评论</label>
+                                <div class="col-sm-10">
+                                    <div class="radio radio-success radio-inline checkbox-circle">
+                                        <input id="article_comment_enabled" value="enabled" name="config[article_comment]" type="radio" <{if condition="$settings.article_comment.param_value eq 'enabled'"}>checked<{/if}> >
+                                        <label for="article_comment_enabled">启用</label>
+                                    </div>
+                                    <div class="radio radio-success radio-inline checkbox-circle">
+                                        <input id="article_comment_disabled" value="disabled" name="config[article_comment]" type="radio" <{if condition="$settings.article_comment.param_value eq 'disabled'"}>checked<{/if}> >
+                                        <label for="article_comment_disabled">禁用</label>
+                                    </div>
+                                    <span class="help-block text-warning"><i class="fa fa-info-circle"></i> 不选默认为禁用</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">是否启用树形评论</label>
+                                <div class="col-sm-10">
+                                    <div class="radio radio-success radio-inline checkbox-circle">
+                                        <input id="article_comment_tree_enabled" value="enabled" name="config[article_comment_tree]" type="radio" <{if condition="$settings.article_comment_tree.param_value eq 'enabled'"}>checked<{/if}> >
+                                        <label for="article_comment_tree_enabled">启用</label>
+                                    </div>
+                                    <div class="radio radio-success radio-inline checkbox-circle">
+                                        <input id="article_comment_tree_disabled" value="disabled" name="config[article_comment_tree]" type="radio" <{if condition="$settings.article_comment_tree.param_value eq 'disabled'"}>checked<{/if}> >
+                                        <label for="article_comment_tree_disabled">禁用</label>
+                                    </div>
+                                    <span class="help-block text-warning"><i class="fa fa-info-circle"></i> 不选默认为禁用</span>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <button class="btn btn-primary" type="submit">保存内容</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<{/block}>
+<{block name="js"}>
+<script type="text/javascript">
+$(function(){
+    $("#setSettingsConfig").Validform({
+        tiptype:function(msg, o, cssctl){
+            if (o.type != 2) {
+                parent._toastr('warning', '警告提示', msg);
+                return false;
+            }
+        },
+        ajaxPost:true,
+        beforeSubmit:function(form){
+            var add_article_load = layer.load();
+            $.ajax({
+                type    : $(form).attr('method'),
+                url     : $(form).attr('action'),
+                data    : $(form).serialize(),
+                dataType: 'json',
+                success : function(data){
+                    layer.close(add_article_load);
+                    if (data.code == 1) {
+                        parent._toastr('success', '成功提示', data.msg);
+                        window.location.reload();
+                    } else {
+                        parent.parent._toastr('error', '错误提示', data.msg);
+                        return;
+                    }
+                },
+                error:function(){
+                    layer.close(add_article_load);
+                    parent._toastr('error', '错误提示', '网络错误');
+                }
+            });
+            return false;
+        }
+    });
+});
+</script>
+<{/block}>

@@ -1,0 +1,39 @@
+<{extend name="/default/public/base" /}>
+    
+<{block name="title"}><{/block}>
+
+
+<{block name="main"}>
+
+<style>
+    .article{
+        padding: 20px;
+        background: #fff;
+    }
+    .article-title{
+        margin-top: 20px;
+        text-align: center;
+    }
+    .article-content img{
+        display: block;
+        max-width: 100%;
+        height: auto;
+    }
+</style>
+<div class="container bs-docs-container">
+    <div class="col-md-9 article">
+        <h4 class="article-title"><{$article.article_title|htmlspecialchars}></h4>
+        <div style="text-align: right;">Date：<{$article.updated_at}></div>
+        
+        <div class="article-content">
+            <{$article.articleWord.html}>
+        </div>
+    </div>
+    <div class="col-md-3">
+    </div>
+</div>
+<{/block}>
+<{block name="js"}>
+<script>
+</script>
+<{/block}>

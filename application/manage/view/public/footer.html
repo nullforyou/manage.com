@@ -1,0 +1,1 @@
+<div class="pull-right">&copy; 2014-2015 <a href="" target="_blank">pig_management</a></div>
