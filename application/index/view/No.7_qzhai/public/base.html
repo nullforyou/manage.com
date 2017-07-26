@@ -3,13 +3,14 @@
 	<head>
 		<meta charset="utf-8" />
 		<title><{block name="title"}><{/block}><{:config('site.title')}></title>
-        <meta name="keywords" content="N0.7测试站"/>
-        <meta name="description" content="N0.7测试站"/>
+        <meta name="keywords" content="<{:config('site.keywords')}>"/>
+        <meta name="description" content="<{:config('site.description')}>"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 		<meta name='robots' content='noindex,follow' />
-        <link rel='stylesheet' id='qzhai-css'  href='__CSS__/style.css?ver=4.8' type='text/css' media='all' />
-        <link rel='stylesheet' id='highlight-css'  href='__CSS__/code/sunburst.css?ver=4.8' type='text/css' media='all' />
-        <script type='text/javascript' src='__JS__/jquery.min.js?ver=4.8'></script>
+        <link rel='stylesheet' id='qzhai-css'  href='__CSS__/style.css' type='text/css' media='all' />
+        <link rel='stylesheet' id='highlight-css'  href='__CSS__/code/sunburst.css' type='text/css' media='all' />
+        <script type='text/javascript' src='__JS__/jquery.min.js'></script>
+		<{block name="css"}><{/block}>
 	</head>
 	<body class="uk-height-1-1">
 		<div id="main" class="wp uk-grid uk-grid-collapse" style="max-width:1120px">
@@ -54,3 +55,4 @@
         </div>
     </body>
 </html>
+<{block name="js"}><{/block}>

@@ -36,8 +36,8 @@
                                 <a class="uk-modal-close uk-close"></a>
                                 <div class="uk-modal-header">感谢打赏!</div>
                                 <div class="uk-thumbnail">
-                                    <img src="http://qzhai.net/000/wp-content/uploads/2016/04/erweima.jpg">
-                                        <div class="uk-thumbnail-caption">支付宝</div>
+                                    <img src="<{:config('site.baseurl')}>/reward.png">
+                                        <div class="uk-thumbnail-caption">微信</div>
                                 </div>
                             </div>
                         </div>
@@ -66,5 +66,15 @@
 <{/block}>
     
 <{block name="js"}>
+	<script>
+		var ajaxignore_string = new String('#, /wp-, .pdf, .zip, .rar, /goto, jiathis.com'); 
+		var ajaxhome="<{:config('site.baseurl')}>";
+		var ajaxloading_code = '<div class="loading" style="left:45%"><img src="__IMAGE__/box.gif"></div>';
+		var ajaxignore = ajaxignore_string.split(', ');
+			
+		function app(){
+			$('pre').each(function(i, e) {hljs.highlightBlock(e)});
+		}
+	</script>
 
 <{/block}>
